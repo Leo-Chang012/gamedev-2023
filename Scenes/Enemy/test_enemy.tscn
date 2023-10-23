@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://Scenes/Enemy/test_enemy.gd" id="1_1jy1o"]
 [ext_resource type="Texture2D" uid="uid://bdeyhc2pcadqo" path="res://icon.svg" id="1_vabny"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_3savu"]
-size = Vector2(32, 32)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i13sj"]
+size = Vector2(31, 29)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pgj7w"]
 size = Vector2(32, 8)
@@ -13,16 +13,20 @@ size = Vector2(32, 8)
 script = ExtResource("1_1jy1o")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, 2)
 scale = Vector2(0.25, 0.25)
 texture = ExtResource("1_vabny")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_3savu")
+[node name="DeathZone" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DeathZone"]
+position = Vector2(-0.5, 2.5)
+shape = SubResource("RectangleShape2D_i13sj")
 
 [node name="Jumpzone" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Jumpzone"]
-position = Vector2(0, -24)
+position = Vector2(0, -18)
 shape = SubResource("RectangleShape2D_pgj7w")
 
 [connection signal="body_entered" from="Jumpzone" to="." method="_on_area_2d_body_entered"]
