@@ -1,5 +1,6 @@
 extends CharacterBody2D
 
+#test
 
 @export var SPEED = 150
 
@@ -23,8 +24,12 @@ var was_wall_normal = Vector2.ZERO
 @onready var coyote_jump_timer = $CoyoteJumpTimer
 @onready var wall_jump_timer = $WallJumpTimer
 
+@onready var animation =$AnimationPlayer
+
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
+
+var playerFacingDirection = "right"
 
 func _physics_process(delta):
 	#update global player position
@@ -56,6 +61,14 @@ func _physics_process(delta):
 	var just_left_wall = was_on_wall and not is_on_wall()
 	if just_left_wall:
 		wall_jump_timer.start()
+
+func _unhandled_input(event):
+	if(Input.is_action_just_pressed("attack")):
+		if(checks()): #must return true
+			if(playerFacingDirection == "left"):
+				pass #play left attack animation
+			else:
+				pass #play right attack animation
 
 func handle_gravity(delta):
 	if not is_on_floor():
@@ -93,6 +106,10 @@ func handle_acceleration(input_axis, delta):
 		return #literally does nothing
 	if input_axis != 0:
 		velocity.x = move_toward(velocity.x, SPEED * input_axis, acceleration * delta)
+		if(input_axis == 1):
+			playerFacingDirection = "right"
+		else:
+			playerFacingDirection = "left"
 
 func handle_air_acceleration(input_axis, delta):
 	if is_on_floor(): 
@@ -111,15 +128,21 @@ func apply_air_resistance(input_axis, delta):
 func enemyJump():
 	velocity.y = jump_velocity
 
+func checks():
+	if(is_on_floor()):
+		return true
+	else:
+		return false
+
 #handle when stuff goes into player
 func _on_player_area_2d_area_entered(area):
 	var name = area.get_name()
 	if(name == "DeathZone"):
+		global.amountOfCoins = 0
 		get_tree().reload_current_scene()
-
-
 
 func _on_player_area_2d_body_entered(body):
 	var name = body.get_name()
 	if(name == "testEnemy"):
+		global.amountOfCoins = 0
 		get_tree().reload_current_scene()
